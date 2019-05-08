@@ -21,11 +21,11 @@ permalink: /2019/projects/p15/midterm/
 ### 三、数据集描述
 使用MovieLens 1M 数据集， 数据集分为三个文件：用户数据users.dat，电影数据movies.da和评分数据ratings.dat。    
 用户数据有用户ID、性别、年龄、职业ID和邮编等，字段如下图所示：  
-![](picture/1.png)  
+![](https://github.com/x3e7/bitdm.github.io/blob/master/2019/projects/P15/picture/1.png)    
 电影数据有电影ID、电影名和电影风格等，如下图所示：  
-![](picture/2.png)  
+![](https://github.com/x3e7/bitdm.github.io/blob/master/2019/projects/P15/picture/2.png)  
 评分数据有用户ID、电影ID、评分和时间戳等，如下图所示：    
-![](picture/3.png)  
+![](https://github.com/x3e7/bitdm.github.io/blob/master/2019/projects/P15/picture/3.png)  
 ### 四、阶段性结果展示
 - 数据预处理  
 	UserID、Occupation和MovieID不用变。  
@@ -36,13 +36,13 @@ permalink: /2019/projects/p15/midterm/
 	Genres和Title字段需要将长度统一，这样在神经网络中方便处理。空白部分用‘< PAD >’对应的数字填充。  
 预处理结果如下图所示：   
 用户数据   
-![](picture/9.png)   
+![](https://github.com/x3e7/bitdm.github.io/blob/master/2019/projects/P15/picture/9.png)   
 电影数据  
-![](picture/10.png) 
+![](https://github.com/x3e7/bitdm.github.io/blob/master/2019/projects/P15/picture/10.png) 
 
 - 模型设计 
    
- ![](picture/5.png)
+ ![](https://github.com/x3e7/bitdm.github.io/blob/master/2019/projects/P15/picture/5.png)
 
 通过研究数据集中的字段类型，我们发现有一些是类别字段，通常的处理是将这些字段转成one hot编码，但是像UserID、MovieID这样的字段就会变成非常的稀疏，输入的维度急剧膨胀，这是我们不愿意见到的，毕竟我这小笔记本不像大厂动辄能处理数以亿计维度的输入。   
 所以在预处理数据时将这些字段转成了数字，我们用这个数字当做嵌入矩阵的索引，在网络的第一层使用了嵌入层，维度是（N，32）和（N，16）。  
@@ -53,7 +53,7 @@ permalink: /2019/projects/p15/midterm/
 
 - 文本卷积网络
 网络看起来像下面这样  
-![](picture/11.png)    
+![](https://github.com/x3e7/bitdm.github.io/blob/master/2019/projects/P15/picture/11.png)    
 网络的第一层是词嵌入层，由每一个单词的嵌入向量组成的嵌入矩阵。下一层使用多个不同尺寸（窗口大小）的卷积核在嵌入矩阵上做卷积，窗口大小指的是每次卷积覆盖几个单词。这里跟对图像做卷积不太一样，图像的卷积通常用2x2、3x3、5x5之类的尺寸，而文本卷积要覆盖整个单词的嵌入向量，所以尺寸是（单词数，向量维度），比如每次滑动3个，4个或者5个单词。第三层网络是max pooling得到一个长向量，最后使用dropout做正则化，最终得到了电影Title的特征。
 
 ### 五、仍需解决的问题
